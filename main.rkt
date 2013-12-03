@@ -15,12 +15,16 @@
 ;
 ; move/NUMMOVE
 ; Where NUMMOVE is a Num and 1 <= NUMMOVE <= 650
+;
+; egg/NUMEGG
+; Where NUMEGG is a Num and 1 <= NUMEGG <= 15
 
 ; A POKENUM is one of:
 ; - NUMPOKEMON
 ; - NUMABILITY
 ; - NUMTYPE 
 ; - NUMMOVE
+; - NUMEGG
 
 (define BASE-URL "http://www.pokeapi.co/api/v1/")
 
@@ -29,6 +33,7 @@
 (define ABIL-URL "ability/")
 (define TYPE-URL "type/")
 (define MOVE-URL "move/")
+(define EGG-URL  "egg/")
 
 ;; APIURI POKENUM -> URL
 ;; Creates a URL for the specified api call
@@ -50,6 +55,10 @@
 ;; NUMMOVE -> URL
 ;; Creates a URL structure for the given NUMMOVE
 (define (move-url num) (create-api-url MOVE-URL num))
+
+;; NUMEGG -> URL
+;; Creates a URL structure for the given NUMEGG
+(define (egg-url num) (create-api-url EGG-URL num))
 
 ;; input-port -> JsExpr | #f
 ;; Given a port, if the port can be read into a json then the json is returned
