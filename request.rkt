@@ -1,7 +1,7 @@
 #lang racket
 
 (require net/url json)
-(require "models.rkt")
+(require "model.rkt")
 
 (provide get)
 
