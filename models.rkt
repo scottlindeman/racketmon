@@ -1,7 +1,6 @@
 #lang racket
 
-(provide (struct-out pokemon)
-         (struct-out evolution))
+(provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  RESOURCES
@@ -28,22 +27,22 @@
                         created            ;; Date
                         exp                ;; Num
                         height             ;; String
-                        types              ;; [Listof String]
-                        abilities          ;; [Listof String]
+                        types              ;; [Listof [Pairof String Num]]
+                        abilities          ;; [Listof [Pairof String Num]]
                         attack             ;; Num
                         defense            ;; Num
                         sp-attack          ;; Num
                         sp-defense         ;; Num
                         catch-rate         ;; Num
                         egg-cycles         ;; Num
-                        egg-groups         ;; [Listof String]
+                        egg-groups         ;; [Listof [Pairof String Num]]
                         ev-yield           ;; String
                         evolutions         ;; [Listof Evloution]
                         growth-rate        ;; String
                         happiness          ;; Num
                         hp                 ;; Num
                         male-female-ratio  ;; String
-                        moves              ;; [Listof String]
+                        moves              ;; [Listof [Pairof String Num]]
                         species            ;; String
                         speed              ;; Num
                         sprites            ;; [Listof ???]
@@ -102,6 +101,7 @@
 (define-struct sprite (id
                        name
                        modified
+                       created
                        pokemon
                        image))
 
