@@ -112,16 +112,20 @@
   (let ([result (call/resource r-url num)])
     (if result (create-fn result) result)))
 
+;; ResourceType POKENUM -> Resource | #f
+(define (get-by-id resource-type id)
+  (cond
+    [(symbol=? resource-type 'pokemon) (make-call POKE-URL id create-pokemon)]
+    [(symbol=? resource-type 'move)    (make-call MOVE-URL id create-move)]
+    [(symbol=? resource-type 'ability) (make-call ABIL-URL id create-ability)]
+    [(symbol=? resource-type 'type)    (make-call TYPE-URL id create-type)]
+    [(symbol=? resource-type 'egg)     (make-call EGGG-URL id create-egg)]
+    [(symbol=? resource-type 'pokedex) (make-call PKDX-URL id create-pokedex)]
+    [else #f]))
+
 ;; ResourceType ?POKENUM? ?NAMEPOKEMON? -> Resource | #f
 (define (get resource-type #:id [id #f] #:name [name #f])
-  (cond [id 
-         (cond [(symbol=? resource-type 'pokemon) (make-call POKE-URL id create-pokemon)]
-               [(symbol=? resource-type 'move)    (make-call MOVE-URL id create-move)]
-               [(symbol=? resource-type 'ability) (make-call ABIL-URL id create-ability)]
-               [(symbol=? resource-type 'type)    (make-call TYPE-URL id create-type)]
-               [(symbol=? resource-type 'egg)     (make-call EGGG-URL id create-egg)]
-               [(symbol=? resource-type 'pokedex) (make-call PKDX-URL id create-pokedex)]
-               [else #f])]
+  (cond [id (get-by-id resource-type id)]
         [name (make-call POKE-URL name create-pokemon)]
         [else #f]))
 
