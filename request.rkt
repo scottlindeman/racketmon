@@ -70,52 +70,20 @@
 (define PKDX-URL "pokedex/")
 (define SPRT-URL "sprite/")
 (define GAME-URL "game/")
-(define DESC-URL "description")
+(define DESC-URL "description/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; URL CREATION
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; APIURI POKENUM -> URL
+;; APIURI (POKENUM | NAMEPOKEMON) -> URL
 ;; Creates a URL for the specified api call
-(define (create-api-url uri num)
-  (string->url (string-append BASE-URL uri (number->string num) "/")))
-
-;; NUMPOKEMON -> URL
-;; Creates a URL structure for the given NUMPOKEMON
-(define (pokemon-url num) (create-api-url POKE-URL num))
-
-;; NUMABILITY -> URL
-;; Creates a URL structure for the given NUMABILITY
-(define (ability-url num) (create-api-url ABIL-URL num))
-
-;; NUMTYPE -> URL
-;; Creates a URL structure for the given NUMTYPE
-(define (type-url num) (create-api-url TYPE-URL num))
-
-;; NUMMOVE -> URL
-;; Creates a URL structure for the given NUMMOVE
-(define (move-url num) (create-api-url MOVE-URL num))
-
-;; NUMEGG -> URL
-;; Creates a URL structure for the given NUMEGG
-(define (egg-url num) (create-api-url EGGG-URL num))
-
-;; NUMPOKEDEX -> URL
-;; Creates a URL structure for the given NUMPOKEDEX
-(define (pokedex-url num) (create-api-url PKDX-URL num))
-
-;; NUMSPRITE -> URL
-;; Creates a URL structure for the given NUMSPRITE
-(define (sprite-url num) (create-api-url SPRT-URL num))
-
-;; NUMGAME -> URL
-;; Creates a URL structure for the given NUMGAME
-(define (game-url num) (create-api-url GAME-URL num))
-
-;; NUMDESCRIPTION -> URL
-;; Creates a URL structure for the given NUMDESCRIPTION
-(define (description-url num) (create-api-url DESC-URL num))
+(define (create-api-url uri id)
+  (string->url (string-append BASE-URL uri 
+                              (cond [(number? id) (number->string id)]
+                                    [(string? id) id]
+                                    [else "0"])
+                              "/")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MAKING REQUESTS
@@ -129,62 +97,33 @@
         data
         #f)))
 
-;; [POKENUM -> JsExpr] POKENUM -> JsExpr
-;; Applies the given url function
-(define (make-call url-fn num)
-  (let ([url (url-fn num)])
+;; APIURL (POKENUM | NAMEPOKEMON) -> JsExpr | #f
+;; Makes the request to the server
+(define (call/resource r-url id)
+  (let ([url (create-api-url r-url id)])
     (call/input-url url
                     get-pure-port
                     port-handler)))
 
-;; NUMPOKEMON -> JsExpr
-;; Retrieves the JSON data from the rest call for pokemon data
-(define (call/pokemon num) (make-call pokemon-url num))
+;; APIURL (POKENUM | NAMEPOKEMON) [JsExpr -> Resource] -> Resource | #f
+;; Handles the result of the request to the server and turns it into the proper
+;; Resource
+(define (make-call r-url num create-fn)
+  (let ([result (call/resource r-url num)])
+    (if result (create-fn result) result)))
 
-;; NUMABILITY -> JsExpr
-;; Retrieves the JSON data from the rest call for ability data
-(define (call/ability num) (make-call ability-url num))
-
-;; NUMTYPE -> JsExpr
-;; Retrieves the JSON data from the rest call for type data
-(define (call/type num) (make-call type-url num))
-
-;; NUMMOVE -> JsExpr
-;; Retrieves the JSON data from the rest call for move data
-(define (call/move num) (make-call move-url num))
-
-;; NUMEGG -> JsExpr
-;; Retrieves the JSON data from the rest call for egg data
-(define (call/egg num) (make-call egg-url num))
-
-;; NUMPOKEDEX -> JsExpr
-;; Retrieves the JSON data from the rest call for pokedex data
-(define (call/pokedex num) (make-call pokedex-url num))
-
-;; NUMSPRITE -> JsExpr
-;; Retrieves the JSON data from the rest call for sprite data
-(define (call/sprite num) (make-call sprite-url num))
-
-;; NUMGAME -> JsExpr
-;; Retrieves the JSON data from the rest call for game data
-(define (call/game num) (make-call game-url num))
-
-;; NUMDESCRIPTION -> JsExpr
-;; Retrieves the JSON data from the rest call for description data
-(define (call/description num) (make-call description-url num))
-
-;; ResourceType ?POKENUM? ?NAMEPOKEMON? -> Resource
+;; ResourceType ?POKENUM? ?NAMEPOKEMON? -> Resource | #f
 (define (get resource-type #:id [id #f] #:name [name #f])
-  (define rid (cond [id id]
-                    [name name]
-                    [else 0]))
-  (cond [(symbol=? resource-type 'pokemon) (create-pokemon (call/pokemon rid))]
-        [(symbol=? resource-type 'move)    (create-move (call/move rid))]
-        [(symbol=? resource-type 'ability) (create-ability (call/ability rid))]
-        [(symbol=? resource-type 'type)    (create-type (call/type rid))]
-        [(symbol=? resource-type 'egg)     (create-egg (call/egg rid))]
-        [(symbol=? resource-type 'pokedex) (create-pokedex (call/pokedex rid))]
-        [else void]))
+  (cond [id 
+         (cond [(symbol=? resource-type 'pokemon) (make-call POKE-URL id create-pokemon)]
+               [(symbol=? resource-type 'move)    (make-call MOVE-URL id create-move)]
+               [(symbol=? resource-type 'ability) (make-call ABIL-URL id create-ability)]
+               [(symbol=? resource-type 'type)    (make-call TYPE-URL id create-type)]
+               [(symbol=? resource-type 'egg)     (make-call EGGG-URL id create-egg)]
+               [(symbol=? resource-type 'pokedex) (make-call PKDX-URL id create-pokedex)]
+               [else #f])]
+        [name (make-call POKE-URL name create-pokemon)]
+        [else #f]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CONVERSION FUNCTIONS
