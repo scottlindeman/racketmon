@@ -128,3 +128,26 @@
 ;; An Evolution is a (evolution String Num String)
 ;; Represents the evolution of a pokemon
 (define-struct evolution (method level to))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; OVERRIDES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; [Resource -> [Listof [Pair String Num]]] Boolean -> [Listof [Pairof String Num]] | [Listof String]
+;; Determines whether to show the id's next to the resource names or not
+(define (pair-override fn resource trigger)
+  (if trigger (fn resource) (map car (fn resource))))
+
+;; The next definitions override automatically created structure functions to
+;; hide implementation details
+(define o-pokemon-moves pokemon-moves)
+(set! pokemon-moves (lambda (p #:see-all [see-all #f])
+                      (pair-override o-pokemon-moves p see-all)))
+
+(define o-pokemon-types pokemon-types)
+(set! pokemon-types (lambda (p #:see-all [see-all #f])
+                      (pair-override o-pokemon-types p see-all)))
+
+(define o-pokemon-abilities pokemon-abilities)
+(set! pokemon-abilities (lambda (p #:see-all [see-all #f])
+                      (pair-override o-pokemon-abilities p see-all)))
