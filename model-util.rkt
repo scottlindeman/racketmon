@@ -2,6 +2,12 @@
 
 (require "request.rkt" "model.rkt")
 
+(provide (except-out (all-defined-out)
+                     resource-findf
+                     resource-get
+                     has-helper)
+         (all-from-out "request.rkt" "model.rkt"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ABSTRACT UTIL FUNCTIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

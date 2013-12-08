@@ -140,6 +140,9 @@
 
 ;; The next definitions override automatically created structure functions to
 ;; hide implementation details
+
+
+;; POKEMON
 (define o-pokemon-moves pokemon-moves)
 (set! pokemon-moves (lambda (p #:see-all [see-all #f])
                       (pair-override o-pokemon-moves p see-all)))
@@ -151,3 +154,20 @@
 (define o-pokemon-abilities pokemon-abilities)
 (set! pokemon-abilities (lambda (p #:see-all [see-all #f])
                       (pair-override o-pokemon-abilities p see-all)))
+
+;; TYPE
+(define o-type-ineffective type-ineffective)
+(set! type-ineffective (lambda (t #:see-all [see-all #f])
+                         (pair-override o-type-ineffective t see-all)))
+
+(define o-type-no-effect type-no-effect)
+(set! type-no-effect (lambda (t #:see-all [see-all #f])
+                         (pair-override o-type-no-effect t see-all)))
+
+(define o-type-super-effective type-super-effective)
+(set! type-super-effective (lambda (t #:see-all [see-all #f])
+                         (pair-override o-type-super-effective t see-all)))
+
+(define o-type-weakness type-weakness)
+(set! type-weakness (lambda (t #:see-all [see-all #f])
+                         (pair-override o-type-weakness t see-all)))
