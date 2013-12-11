@@ -115,12 +115,14 @@
 ;; ResourceType POKENUM -> Resource | #f
 (define (get-by-id resource-type id)
   (cond
-    [(symbol=? resource-type 'pokemon) (make-call POKE-URL id create-pokemon)]
-    [(symbol=? resource-type 'move)    (make-call MOVE-URL id create-move)]
-    [(symbol=? resource-type 'ability) (make-call ABIL-URL id create-ability)]
-    [(symbol=? resource-type 'type)    (make-call TYPE-URL id create-type)]
-    [(symbol=? resource-type 'egg)     (make-call EGGG-URL id create-egg)]
-    [(symbol=? resource-type 'pokedex) (make-call PKDX-URL id create-pokedex)]
+    [(symbol=? resource-type 'pokemon)     (make-call POKE-URL id create-pokemon)]
+    [(symbol=? resource-type 'move)        (make-call MOVE-URL id create-move)]
+    [(symbol=? resource-type 'ability)     (make-call ABIL-URL id create-ability)]
+    [(symbol=? resource-type 'type)        (make-call TYPE-URL id create-type)]
+    [(symbol=? resource-type 'egg)         (make-call EGGG-URL id create-egg)]
+    [(symbol=? resource-type 'pokedex)     (make-call PKDX-URL id create-pokedex)]
+    [(symbol=? resource-type 'game)        (make-call GAME-URL id create-game)]
+    [(symbol=? resource-type 'description) (make-call DESC-URL id create-description)]
     [else #f]))
 
 ;; ResourceType ?POKENUM? ?NAMEPOKEMON? -> Resource | #f
@@ -166,7 +168,7 @@
            (map name-pair (hash-ref jsexpr 'moves))
            (hash-ref jsexpr 'species)
            (hash-ref jsexpr 'speed)
-           (hash-ref jsexpr 'sprites) ;; Not sure what to do for sprites
+           (map name-pair (hash-ref jsexpr 'sprites))
            (hash-ref jsexpr 'total)
            (hash-ref jsexpr 'weight)))
 
@@ -203,13 +205,13 @@
        (hash-ref jsexpr 'name)
        (hash-ref jsexpr 'modified)
        (hash-ref jsexpr 'created)
-       (map jsexpr-name (hash-ref jsexpr 'pokemon))))
+       (map name-pair (hash-ref jsexpr 'pokemon))))
 
 (define (create-pokedex jsexpr)
   (pokedex (hash-ref jsexpr 'name)
            (hash-ref jsexpr 'modified)
            (hash-ref jsexpr 'created)
-           (map jsexpr-name (hash-ref jsexpr 'pokemon))))
+           (map name-pair (hash-ref jsexpr 'pokemon))))
 
 (define (create-sprite jsexpr)
   (sprite (hash-ref jsexpr 'id)
@@ -230,7 +232,7 @@
                (hash-ref jsexpr 'name)
                (hash-ref jsexpr 'modified)
                (hash-ref jsexpr 'created)
-               (hash-ref jsexpr 'games)
+               (map name-pair (hash-ref jsexpr 'games))
                (hash-ref jsexpr 'pokemon)))
 
 (define (create-evolution jsexpr)

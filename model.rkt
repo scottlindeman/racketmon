@@ -45,7 +45,7 @@
                         moves              ;; [Listof [Pairof String Num]]
                         species            ;; String
                         speed              ;; Num
-                        sprites            ;; [Listof ???]
+                        sprites            ;; [Listof [Pairof String Num]] Not necessarily unique string
                         total              ;; Num
                         weight))           ;; String
 
@@ -81,7 +81,7 @@
                      super-effective
                      weakness))
 
-;; An Egg is a (egg Num String Date Date [Listof String])
+;; An Egg is a (egg Num String Date Date [Listof [Pairof String Num]])
 ;; Represents a pokemon egg group
 (define-struct egg (id
                     name
@@ -89,7 +89,7 @@
                     created
                     pokemon))
 
-;; A Pokedex is a (Pokedex String Date Date [Listof String])
+;; A Pokedex is a (Pokedex String Date Date [Listof [Pairof String Num]])
 ;; Represents the pokedex, listing of all pokemon
 (define-struct pokedex (name
                         modified
@@ -112,7 +112,7 @@
                      modified
                      created))
 
-;; A Description is a (description Num String Date Date [Listof String] String)
+;; A Description is a (description Num String Date Date [Listof [Pairof String Num]] String)
 ;; Represents a pokemon description
 (define-struct description (id
                             name
@@ -153,7 +153,7 @@
 
 (define o-pokemon-abilities pokemon-abilities)
 (set! pokemon-abilities (lambda (p #:see-all [see-all #f])
-                      (pair-override o-pokemon-abilities p see-all)))
+                          (pair-override o-pokemon-abilities p see-all)))
 
 ;; TYPE
 (define o-type-ineffective type-ineffective)
@@ -162,12 +162,25 @@
 
 (define o-type-no-effect type-no-effect)
 (set! type-no-effect (lambda (t #:see-all [see-all #f])
-                         (pair-override o-type-no-effect t see-all)))
+                       (pair-override o-type-no-effect t see-all)))
 
 (define o-type-super-effective type-super-effective)
 (set! type-super-effective (lambda (t #:see-all [see-all #f])
-                         (pair-override o-type-super-effective t see-all)))
+                             (pair-override o-type-super-effective t see-all)))
 
 (define o-type-weakness type-weakness)
 (set! type-weakness (lambda (t #:see-all [see-all #f])
-                         (pair-override o-type-weakness t see-all)))
+                      (pair-override o-type-weakness t see-all)))
+;; EGG
+(define o-egg-pokemon egg-pokemon)
+(set! egg-pokemon (lambda (e #:see-all [see-all #f])
+                    (pair-override o-egg-pokemon e see-all)))
+;; POKEDEX
+(define o-pokedex-pokemon pokedex-pokemon)
+(set! pokedex-pokemon (lambda (p #:see-all [see-all #f])
+                        (pair-override o-pokedex-pokemon p see-all)))
+
+;; DESCRIPTION
+(define o-description-games description-games)
+(set! description-games (lambda (d #:see-all [see-all #f])
+                          (pair-override o-description-games d see-all)))
