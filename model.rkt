@@ -155,6 +155,14 @@
 (set! pokemon-abilities (lambda (p #:see-all [see-all #f])
                           (pair-override o-pokemon-abilities p see-all)))
 
+(define o-pokemon-egg-groups pokemon-egg-groups)
+(set! pokemon-egg-groups (lambda (p #:see-all [see-all #f])
+                           (pair-override o-pokemon-egg-groups p see-all)))
+
+(define o-pokemon-sprites pokemon-sprites)
+(set! pokemon-sprites (lambda (p #:see-all [see-all #f])
+                        (pair-override o-pokemon-sprites p see-all)))
+
 ;; TYPE
 (define o-type-ineffective type-ineffective)
 (set! type-ineffective (lambda (t #:see-all [see-all #f])

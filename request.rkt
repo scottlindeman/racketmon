@@ -121,6 +121,7 @@
     [(symbol=? resource-type 'type)        (make-call TYPE-URL id create-type)]
     [(symbol=? resource-type 'egg)         (make-call EGGG-URL id create-egg)]
     [(symbol=? resource-type 'pokedex)     (make-call PKDX-URL id create-pokedex)]
+    [(symbol=? resource-type 'sprite)      (make-call SPRT-URL id create-sprite)]
     [(symbol=? resource-type 'game)        (make-call GAME-URL id create-game)]
     [(symbol=? resource-type 'description) (make-call DESC-URL id create-description)]
     [else #f]))

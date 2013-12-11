@@ -5,8 +5,7 @@
 (provide (except-out (all-defined-out)
                      resource-findf
                      resource-get
-                     has-helper)
-         (all-from-out "request.rkt" "model.rkt"))
+                     has-helper))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ABSTRACT UTIL FUNCTIONS
