@@ -10,7 +10,8 @@ Clone this repository into any directory.
 
 Then use raco:
 
-    $ raco link -n "racketmon" "{Full path to local racketmon directory here}"
+    $ cd {racketmon directory}
+    $ raco pkg install --link "{Full path to local racketmon directory here}"
 
 Usage
 -----
