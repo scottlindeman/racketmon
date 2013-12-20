@@ -6,12 +6,9 @@ A wrapper for the Pokéapi <http://www.pokeapi.co/>.
 Installation
 ------------
 
-Clone this repository into any directory.
+Use raco to install this package:
 
-Then use raco:
-
-    $ cd {racketmon directory}
-    $ raco pkg install --link "{Full path to local racketmon directory here}"
+    $ raco pkg install github://github.com/scottlindeman/racketmon/master
 
 Usage
 -----
