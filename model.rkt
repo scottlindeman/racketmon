@@ -130,65 +130,68 @@
 (define-struct evolution (method level to))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; OVERRIDES
+;; OVERLOADING
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; [Resource -> [Listof [Pair String Num]]] Boolean -> [Listof [Pairof String Num]] | [Listof String]
-;; Determines whether to show the id's next to the resource names or not
-(define (pair-override fn resource trigger)
-  (if trigger (fn resource) (map car (fn resource))))
 
 ;; The next definitions override automatically created structure functions to
 ;; hide implementation details
 
+;; [Resource -> [Listof [Pair String Num]]] Boolean -> [Listof [Pairof String Num]] | [Listof String]
+;; Determines whether to show the id's next to the resource names or not
+(define (pair-overload fn)
+  (lambda (r #:see-all [see-all #f])
+    (if see-all (fn r) (map car (fn r)))))
+
+;; Macro that defines a function that is the original of the function name passed in
+(define-syntax (hide-pair stx)
+  (syntax-case stx ()
+    [(hide-pair name)
+     (let ([make-id 
+            (lambda (template . ids)
+              (let ([str (apply format template (map syntax->datum ids))])
+                (datum->syntax stx (string->symbol str))))])
+       (with-syntax ([o-name (make-id "o-~a" #'name)]
+                     [name (make-id "~a" #'name)])
+         #'(begin
+             (define o-name name))))]))
 
 ;; POKEMON
-(define o-pokemon-moves pokemon-moves)
-(set! pokemon-moves (lambda (p #:see-all [see-all #f])
-                      (pair-override o-pokemon-moves p see-all)))
+(hide-pair "pokemon-moves")
+(set! pokemon-moves (pair-overload o-pokemon-moves))
 
-(define o-pokemon-types pokemon-types)
-(set! pokemon-types (lambda (p #:see-all [see-all #f])
-                      (pair-override o-pokemon-types p see-all)))
+(hide-pair "pokemon-types")
+(set! pokemon-types (pair-overload o-pokemon-types))
 
-(define o-pokemon-abilities pokemon-abilities)
-(set! pokemon-abilities (lambda (p #:see-all [see-all #f])
-                          (pair-override o-pokemon-abilities p see-all)))
+(hide-pair "pokemon-abilities")
+(set! pokemon-abilities (pair-overload o-pokemon-abilities))
 
-(define o-pokemon-egg-groups pokemon-egg-groups)
-(set! pokemon-egg-groups (lambda (p #:see-all [see-all #f])
-                           (pair-override o-pokemon-egg-groups p see-all)))
+(hide-pair "pokemon-egg-groups")
+(set! pokemon-egg-groups (pair-overload o-pokemon-egg-groups))
 
-(define o-pokemon-sprites pokemon-sprites)
-(set! pokemon-sprites (lambda (p #:see-all [see-all #f])
-                        (pair-override o-pokemon-sprites p see-all)))
+(hide-pair "pokemon-sprites")
+(set! pokemon-sprites (pair-overload o-pokemon-sprites))
 
 ;; TYPE
-(define o-type-ineffective type-ineffective)
-(set! type-ineffective (lambda (t #:see-all [see-all #f])
-                         (pair-override o-type-ineffective t see-all)))
+(hide-pair "type-ineffective")
+(set! type-ineffective (pair-overload o-type-ineffective))
 
-(define o-type-no-effect type-no-effect)
-(set! type-no-effect (lambda (t #:see-all [see-all #f])
-                       (pair-override o-type-no-effect t see-all)))
+(hide-pair "type-no-effect")
+(set! type-no-effect (pair-overload o-type-no-effect))
 
-(define o-type-super-effective type-super-effective)
-(set! type-super-effective (lambda (t #:see-all [see-all #f])
-                             (pair-override o-type-super-effective t see-all)))
+(hide-pair "type-super-effective")
+(set! type-super-effective (pair-overload o-type-super-effective))
 
-(define o-type-weakness type-weakness)
-(set! type-weakness (lambda (t #:see-all [see-all #f])
-                      (pair-override o-type-weakness t see-all)))
+(hide-pair "type-weakness")
+(set! type-weakness (pair-overload o-type-weakness))
+
 ;; EGG
-(define o-egg-pokemon egg-pokemon)
-(set! egg-pokemon (lambda (e #:see-all [see-all #f])
-                    (pair-override o-egg-pokemon e see-all)))
+(hide-pair "egg-pokemon")
+(set! egg-pokemon (pair-overload o-egg-pokemon))
+
 ;; POKEDEX
-(define o-pokedex-pokemon pokedex-pokemon)
-(set! pokedex-pokemon (lambda (p #:see-all [see-all #f])
-                        (pair-override o-pokedex-pokemon p see-all)))
+(hide-pair "pokedex-pokemon")
+(set! pokedex-pokemon (pair-overload o-pokedex-pokemon))
 
 ;; DESCRIPTION
-(define o-description-games description-games)
-(set! description-games (lambda (d #:see-all [see-all #f])
-                          (pair-override o-description-games d see-all)))
+(hide-pair "description-games")
+(set! description-games (pair-overload o-description-games))
