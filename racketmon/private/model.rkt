@@ -29,6 +29,7 @@
                         height             ;; String
                         types              ;; [Listof [Pairof String Num]]
                         abilities          ;; [Listof [Pairof String Num]]
+                        descriptions       ;; [Listof [Pairof String Num]]
                         attack             ;; Num
                         defense            ;; Num
                         sp-attack          ;; Num
@@ -164,6 +165,9 @@
 
 (hide-pair "pokemon-abilities")
 (set! pokemon-abilities (pair-overload o-pokemon-abilities))
+
+(hide-pair "pokemon-descriptions")
+(set! pokemon-descriptions (pair-overload o-pokemon-descriptions))
 
 (hide-pair "pokemon-egg-groups")
 (set! pokemon-egg-groups (pair-overload o-pokemon-egg-groups))
