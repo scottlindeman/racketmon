@@ -153,6 +153,7 @@
            (hash-ref jsexpr 'height)
            (map name-pair (hash-ref jsexpr 'types))
            (map name-pair (hash-ref jsexpr 'abilities))
+           (map name-pair (hash-ref jsexpr 'descriptions))
            (hash-ref jsexpr 'attack)
            (hash-ref jsexpr 'defense)
            (hash-ref jsexpr 'sp_atk)
